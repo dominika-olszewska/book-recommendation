@@ -25,32 +25,32 @@ print(tfidf_matrix.shape)
 # Compute the cosine similarity matrix
 cosine_sim = linear_kernel(tfidf_matrix, tfidf_matrix)
 
-# Construct a reverse map of indices and movie titles
+# Construct a reverse map of indices and books titles
 indices = pd.Series(books_data.index, index=books_data['title']).drop_duplicates()
 
 randomTitle = books_data['title'].sample().iloc[0]
 
 
-# Function that takes in movie title as input and outputs most similar movies
+# Function that takes in book title as input and outputs most similar books
 
 def get_recommendations(title, cosine_sim=cosine_sim):
-    # Get the index of the movie that matches the title
+    # Get the index of the book that matches the title
     idx = indices[title]
 
-    # Get the pairwsie similarity scores of all movies with that movie
+    # Get the pairwsie similarity scores of all books with that book
     sim_scores = list(enumerate(cosine_sim[idx]))
 
-    # Sort the movies based on the similarity scores
+    # Sort the books based on the similarity scores
     sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
 
-    # Get the scores of the 10 most similar movies
+    # Get the scores of the 10 most similar books
     sim_scores = sim_scores[1:11]
 
-    # Get the movie indices
-    movie_indices = [i[0] for i in sim_scores]
+    # Get the book indices
+    book_indices = [i[0] for i in sim_scores]
 
     print('Most similar books to: ' + randomTitle)
-    # Return the top 10 most similar movies
-    return books_data[['title', 'author', 'genres']].iloc[movie_indices]
+    # Return the top 10 most similar books
+    return books_data[['title', 'author', 'genres']].iloc[book_indices]
 
 # print(get_recommendations(randomTitle))
