@@ -1,20 +1,12 @@
-import numpy as np
-import matplotlib.pyplot as plt
-import pandas as pd
-import seaborn as sns
-from surprise import SVD, Reader, Dataset
+import content_based_filtering as content_f
+import collaborative_filtering as collaborative_f
+import demographic_filtering as demographic_f
 
-ratings_data = pd.read_csv('ratings-small.csv')
-ratings_data.head()
+# Demographic filtering
 
-books_all = pd.read_csv('books.csv')
-books_all.head()
 
-books_name = pd.read_csv('books.csv')
-books_name = books_name[['book_id', 'title']]
-books_name.head()
+# Content based filtering
+content_f.get_recommendations(content_f.randomTitle)
 
-books_data = pd.merge(ratings_data, books_name, on='book_id')
-
-reader = Reader()
-data = Dataset.load_from_df(books_data[['user_id', 'book_id', 'rating']], reader)
+# Collaborative filtering
+collaborative_f.get_recommended_books(395)
