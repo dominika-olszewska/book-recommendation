@@ -1,11 +1,15 @@
+import os
 from surprise import SVD, Reader, Dataset
 from surprise.model_selection import cross_validate
 import pandas as pd
 
 # COLLABORATIVE FILTERING
 
+DIR = './data/'
+SET = 'collaborative_set'
+
 reader = Reader()
-merged_set = pd.read_csv('./data/merged_books_set')
+merged_set = pd.read_csv(os.path.join(DIR, SET))
 merged_set.head()
 
 data = Dataset.load_from_df(merged_set[['user_id', 'book_id', 'rating']], reader)
@@ -26,7 +30,7 @@ def predict_rating(user, book_id):
 def get_ids_of_recommended_books(user):
     all_predictions = []
     list_of_predicted_ratings = []
-    print('books ids', books_ids)
+    # print('books ids', books_ids)
 
     for book_id in books_ids:
         new_prediction = predict_rating(user, book_id)
@@ -51,13 +55,11 @@ def get_recommended_books(user):
     ids_od_recommended_books = get_ids_of_recommended_books(user)
     ids_od_recommended_books = list(dict.fromkeys(ids_od_recommended_books))
     print('ids_od_recommended_books', ids_od_recommended_books, 'user', user)
-    rows = []
+    books = pd.DataFrame()
     for book_id in ids_od_recommended_books:
-        row = merged_set.loc[merged_set['book_id'] == book_id]
-        rows.append(row.iloc[0])
-        # rows.append(row)
-    print('rows', rows)
+        row = merged_set.loc[merged_set['book_id'] == book_id].iloc[0]
+        print('row:', row['title'])
+        books = books.append(row, ignore_index=True)
+    return books
 
 
-user = 395
-get_recommended_books(user)

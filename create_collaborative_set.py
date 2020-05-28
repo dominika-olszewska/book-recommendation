@@ -1,10 +1,13 @@
 import pandas as pd
+import re
+import os
+import sys
 import gzip
 import json
 import os
 
 DIR = './data/'
-NAME = 'content_base_set.csv'
+NAME = 'collaborative_set'
 
 
 def load_data(file_name, head=None):
@@ -33,13 +36,18 @@ def getAuthorIdFromArray(arr):
         return arr[0].get("author_id")
 
 
-books = load_data(os.path.join(DIR, 'goodreads_books.json.gz'), 20000)
-genres = load_data(os.path.join(DIR, 'goodreads_book_genres_initial.json.gz'), 200000)
-authors = load_data(os.path.join(DIR, 'goodreads_book_authors.json.gz'), 200000)
+books = load_data(os.path.join(DIR, 'goodreads_books.json.gz'), 90000)
+genres = load_data(os.path.join(DIR, 'goodreads_book_genres_initial.json.gz'), 90000)
+authors = load_data(os.path.join(DIR, 'goodreads_book_authors.json.gz'), 90000)
 
 books_data = pd.DataFrame(books)
 books_genres = pd.DataFrame(genres)
 books_authors = pd.DataFrame(authors)
+books_interactions = pd.read_csv(os.path.join(DIR, 'goodreads_interactions.csv'), nrows=1000000)
+
+books_interactions['book_id'] = books_interactions['book_id'].astype(int)
+books_data['book_id'] = books_data['book_id'].astype(int)
+books_genres['book_id'] = books_genres['book_id'].astype(int)
 
 authors_list = list(books_authors)
 
@@ -51,11 +59,24 @@ authors_list.remove('ratings_count')
 # creating new books_authors, based on 'slimmer' authors_list
 books_authors = books_authors[authors_list]
 
+interactions_list = list(books_interactions)
+
+# removing unnecessary columns
+interactions_list.remove('is_reviewed')
+
+# creating new books_interactions, based on 'slimmer' interactions_list
+books_interactions = books_interactions[interactions_list]
+
 # Selecting only necessary columns from books_data
-books_data = books_data[['book_id', 'title', 'ratings_count', 'average_rating', 'description', 'num_pages', 'authors', 'format', 'is_ebook', 'image_url']]
+books_data = books_data[
+    ['book_id', 'title', 'ratings_count', 'average_rating', 'description', 'num_pages', 'authors', 'format', 'is_ebook',
+     'image_url']]
 
 # Adding genres information to existing table
 books_data = pd.merge(books_data, books_genres, on='book_id')
+
+# Adding genres information to existing table
+books_data = pd.merge(books_data, books_interactions, on='book_id')
 
 # Map object to single string with genres
 books_data['genres'] = books_data['genres'].apply(getGenresFromObject)

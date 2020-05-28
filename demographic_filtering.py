@@ -23,7 +23,6 @@ print('m is: ', m)
 q_movies = books_data.copy().loc[books_data['ratings_count'] >= m]
 print(q_movies.shape)
 
-
 def weighted_rating(x, m=m, C=C):
     v = x['ratings_count']
     R = x['average_rating']
@@ -37,16 +36,17 @@ q_movies['score'] = q_movies.apply(weighted_rating, axis=1)
 # Sort movies based on score calculated above
 q_movies = q_movies.sort_values('score', ascending=False)
 
-# Print the top 15 movies
-print(q_movies[['title', 'ratings_count', 'average_rating', 'score']].head(10))
+def getTopBooks():
+  return q_movies[['book_id', 'title', 'author', 'description', 'ratings_count', 'average_rating', 'num_pages', 'format', 'is_ebook', 'image_url']].head(10)
 
-pop = q_movies.sort_values('score', ascending=False)
-plt.figure(figsize=(12, 4))
+#Drawing a chart
+# pop = q_movies.sort_values('score', ascending=False)
+# plt.figure(figsize=(12, 4))
 
-plt.barh(pop['title'].head(6), pop['score'].head(6), align='center',
-         color='skyblue')
-plt.gca().invert_yaxis()
-plt.xlabel("Popularity")
-plt.title("Popular Movies")
+# plt.barh(pop['title'].head(6), pop['score'].head(6), align='center',
+#          color='skyblue')
+# plt.gca().invert_yaxis()
+# plt.xlabel("Popularity")
+# plt.title("Popular Movies")
 
-plt.show()
+# plt.show()
