@@ -3,9 +3,16 @@ import content_based_filtering as content_f
 import demographic_filtering as demographic_f
 import collaborative_filtering as collaborative_f
 
-from flask import Flask, jsonify
+from flask import Flask
 
 app = Flask(__name__)
+
+# Getting books from the set
+# Example: http://127.0.0.1:5000/books
+@app.route('/books/', methods=['GET'])
+def books():
+    books = fetch_f.getBooks()
+    return books.to_json(orient='records')
 
 
 # Getting random book from the set

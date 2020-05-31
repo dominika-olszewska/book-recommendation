@@ -23,3 +23,7 @@ def getBookByTitle(title):
 
 def getBooksByAuthor(author):
     return books_data.loc[books_data['author'] == author]
+
+
+def getBooks():
+    return books_data

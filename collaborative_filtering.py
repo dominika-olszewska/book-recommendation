@@ -12,6 +12,9 @@ reader = Reader()
 merged_set = pd.read_csv(os.path.join(DIR, SET))
 merged_set.head()
 
+not_read_books = merged_set.loc[merged_set['is_read'] == 0]
+not_read_books.head()
+
 data = Dataset.load_from_df(merged_set[['user_id', 'book_id', 'rating']], reader)
 books_ids = merged_set['book_id'].tolist()
 books_ids = list(dict.fromkeys(books_ids))
@@ -30,7 +33,6 @@ def predict_rating(user, book_id):
 def get_ids_of_recommended_books(user):
     all_predictions = []
     list_of_predicted_ratings = []
-    # print('books ids', books_ids)
 
     for book_id in books_ids:
         new_prediction = predict_rating(user, book_id)
@@ -57,8 +59,7 @@ def get_recommended_books(user):
     print('ids_od_recommended_books', ids_od_recommended_books, 'user', user)
     books = pd.DataFrame()
     for book_id in ids_od_recommended_books:
-        row = merged_set.loc[merged_set['book_id'] == book_id].iloc[0]
-        print('row:', row['title'])
+        row = not_read_books.loc[not_read_books['book_id'] == book_id].iloc[0]
         books = books.append(row, ignore_index=True)
     return books
 
