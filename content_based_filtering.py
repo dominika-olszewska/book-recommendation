@@ -32,13 +32,13 @@ indices = pd.Series(
 
 
 def get_recommendations(title, cosine_sim=cosine_sim):
-    # Get the index of the movie that matches the title
+    # Get the index of the book that matches the title
     idx = indices[title]
 
     # Get the pairwsie similarity scores of all movies with that movie
     sim_scores = list(enumerate(cosine_sim[idx]))
 
-    # Sort the movies based on the similarity scores
+    # Sort the books based on the similarity scores
     sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
 
     # Get the scores of the 10 most similar book
