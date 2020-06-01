@@ -1,6 +1,6 @@
-# book-recommendation
+# Book recommendations
 
-# Describtion:
+## Describtion:
 The theme of our project was the construction of a book recommendation system. The end result is a simple server that allows you to query the API with a request for access to the recommendations of books that provide book or user input from the database.
 
 ## Data:
