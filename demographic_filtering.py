@@ -39,14 +39,14 @@ q_movies = q_movies.sort_values('score', ascending=False)
 def getTopBooks():
   return q_movies[['book_id', 'title', 'author', 'description', 'ratings_count', 'average_rating', 'num_pages', 'format', 'is_ebook', 'image_url']].head(10)
 
-#Drawing a chart
+# #Drawing a chart
 # pop = q_movies.sort_values('score', ascending=False)
 # plt.figure(figsize=(12, 4))
-
+#
 # plt.barh(pop['title'].head(6), pop['score'].head(6), align='center',
 #          color='skyblue')
 # plt.gca().invert_yaxis()
 # plt.xlabel("Popularity")
-# plt.title("Popular Movies")
-
+# plt.title("Popular Books")
+#
 # plt.show()

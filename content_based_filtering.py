@@ -8,8 +8,6 @@ SET = 'content_base_set.csv'
 
 books_data = pd.read_csv(os.path.join(DIR, SET), nrows=10000)
 
-# print(books_data.head())
-
 # Define a TF-IDF Vectorizer Object. Remove all english stop words such as 'the', 'a'
 tfidf = TfidfVectorizer(stop_words='english')
 
@@ -25,11 +23,12 @@ tfidf_matrix = tfidf.fit_transform(books_data['description'])
 # Compute the cosine similarity matrix
 cosine_sim = linear_kernel(tfidf_matrix, tfidf_matrix)
 
-# Construct a reverse map of indices and movie titles
+# Construct a reverse map of indices and book titles
 indices = pd.Series(
     books_data.index, index=books_data['title']).drop_duplicates()
 
-# Function that takes in movie title as input and outputs most similar movies
+
+# Function that takes in book title as input and outputs most similar books
 
 
 def get_recommendations(title, cosine_sim=cosine_sim):
@@ -42,11 +41,13 @@ def get_recommendations(title, cosine_sim=cosine_sim):
     # Sort the movies based on the similarity scores
     sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
 
-    # Get the scores of the 10 most similar movies
+    # Get the scores of the 10 most similar book
     sim_scores = sim_scores[1:11]
 
-    # Get the movie indices
-    movie_indices = [i[0] for i in sim_scores]
+    # Get the book indices
+    book_indices = [i[0] for i in sim_scores]
 
-    # Return the top 10 most similar movies
-    return books_data[['book_id', 'title', 'author', 'description', 'ratings_count', 'average_rating', 'num_pages', 'format', 'is_ebook', 'image_url']].iloc[movie_indices]
+    # Return the top 10 most similar books
+    return books_data[
+        ['book_id', 'title', 'author', 'description', 'ratings_count', 'average_rating', 'num_pages', 'format',
+         'is_ebook', 'image_url']].iloc[book_indices]
